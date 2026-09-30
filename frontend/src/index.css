@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: #172033;
+  background: #f8fafc;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+@layer components {
+  .card { @apply rounded-2xl border border-slate-200 bg-white shadow-soft; }
+  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.18em] text-cyan-700; }
+  .btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition; }
+  .btn-primary { @apply btn bg-slate-900 text-white hover:bg-slate-700; }
+  .btn-secondary { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50; }
+}

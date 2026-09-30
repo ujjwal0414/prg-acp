@@ -1,0 +1,23 @@
+# --- Python Backend ---
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.venv/
+**/venv/
+**/env/
+**/.env
+
+# --- React Frontend ---
+**/node_modules/
+**/dist/
+**/build/
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# --- OS / IDE files ---
+.DS_Store
+Thumbs.db
+**/.vscode/
+**/.idea/
