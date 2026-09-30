@@ -32,7 +32,7 @@ class ExperimentRequest(BaseModel):
     seed: int = 7
 
 
-@app.get("/")
+@app.get("/",methods=["GET","HEAD"])
 def root():
     return {"project": "PRG-ACP", "status": "running"}
 
