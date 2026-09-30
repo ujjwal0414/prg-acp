@@ -32,14 +32,16 @@ class ExperimentRequest(BaseModel):
     seed: int = 7
 
 
-@app.route("/",methods=["GET","HEAD"])
+@app.get("/")
+@app.head("/")  # <-- Add this right under app.get
 def root():
     return {"project": "PRG-ACP", "status": "running"}
 
-
 @app.get("/api/health")
+@app.head("/api/health")  # <-- Add this here too
 def health():
     return {"status": "ok", "compute": "CPU"}
+
 
 
 @app.get("/api/datasets")
