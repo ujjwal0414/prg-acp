@@ -1206,14 +1206,140 @@ function Experiments() {
   </Page>;
 }
 
+// function Ablations() {
+//   const [data,setData]=useState([]);
+//   useEffect(()=>{getAblation().then(setData)},[]);
+//   return <Page><Section eyebrow="04 · Ablation study" title="Does each proposed idea actually matter?">Ablation removes one component at a time. The final thesis should replace these demo values with controlled experimental results.</Section>
+//     <div className="card mt-10 overflow-x-auto"><table className="w-full min-w-[700px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase text-slate-400"><tr><th className="p-5">Variant</th><th>Coverage</th><th>Width</th><th>Score</th><th>ESS</th></tr></thead><tbody>{data.map(r=><tr className="border-t" key={r.name}><td className="p-5 font-semibold">{r.name}</td><td>{(r.coverage*100).toFixed(1)}%</td><td>{r.width.toFixed(2)}</td><td>{r.score.toFixed(2)}</td><td>{r.ess.toFixed(1)}</td></tr>)}</tbody></table></div>
+//     <div className="card mt-6 p-6"><div className="eyebrow">Why this matters</div><p className="mt-3 text-sm leading-7 text-slate-600">N1 tests regime information, N2 tests local geometry, N3 tests adaptive bandwidth and N4 tests whether the reliability safeguard prevents pathological over-localization.</p></div>
+//   </Page>;
+// }
+
+
 function Ablations() {
-  const [data,setData]=useState([]);
-  useEffect(()=>{getAblation().then(setData)},[]);
-  return <Page><Section eyebrow="04 · Ablation study" title="Does each proposed idea actually matter?">Ablation removes one component at a time. The final thesis should replace these demo values with controlled experimental results.</Section>
-    <div className="card mt-10 overflow-x-auto"><table className="w-full min-w-[700px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase text-slate-400"><tr><th className="p-5">Variant</th><th>Coverage</th><th>Width</th><th>Score</th><th>ESS</th></tr></thead><tbody>{data.map(r=><tr className="border-t" key={r.name}><td className="p-5 font-semibold">{r.name}</td><td>{(r.coverage*100).toFixed(1)}%</td><td>{r.width.toFixed(2)}</td><td>{r.score.toFixed(2)}</td><td>{r.ess.toFixed(1)}</td></tr>)}</tbody></table></div>
-    <div className="card mt-6 p-6"><div className="eyebrow">Why this matters</div><p className="mt-3 text-sm leading-7 text-slate-600">N1 tests regime information, N2 tests local geometry, N3 tests adaptive bandwidth and N4 tests whether the reliability safeguard prevents pathological over-localization.</p></div>
-  </Page>;
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+
+    getAblation()
+      .then((result) => {
+        setData(result);
+      })
+      .catch(() => {
+        setError("Unable to load ablation results. Please check the backend.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <Page>
+      <Section
+        eyebrow="04 · Ablation study"
+        title="Does each proposed idea actually matter?"
+      >
+        Ablation removes one component at a time. The final thesis should
+        replace these demo values with controlled experimental results.
+      </Section>
+
+      {/* Loading state */}
+      {loading && (
+        <div className="card mt-10 flex min-h-[300px] flex-col items-center justify-center p-10">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-50">
+            <div className="h-7 w-7 animate-spin rounded-full border-4 border-slate-200 border-t-cyan-600" />
+          </div>
+
+          <h3 className="mt-5 font-display text-lg font-bold text-slate-800">
+            Loading ablation results...
+          </h3>
+
+          <p className="mt-2 max-w-sm text-center text-sm leading-6 text-slate-500">
+            The backend is retrieving the results for each ablation variant.
+            This may take a moment.
+          </p>
+        </div>
+      )}
+
+      {/* Error state */}
+      {!loading && error && (
+        <div className="mt-10 rounded-2xl border border-red-200 bg-red-50 p-6">
+          <div className="font-display font-bold text-red-800">
+            Unable to load results
+          </div>
+
+          <p className="mt-2 text-sm leading-6 text-red-700">
+            {error}
+          </p>
+        </div>
+      )}
+
+      {/* Results */}
+      {!loading && !error && (
+        <>
+          <div className="card mt-10 overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-sm">
+              <thead className="bg-slate-50 text-xs uppercase text-slate-400">
+                <tr>
+                  <th className="p-5">Variant</th>
+                  <th>Coverage</th>
+                  <th>Width</th>
+                  <th>Score</th>
+                  <th>ESS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {data.map((r) => (
+                  <tr className="border-t" key={r.name}>
+                    <td className="p-5 font-semibold">
+                      {r.name}
+                    </td>
+
+                    <td>
+                      {(r.coverage * 100).toFixed(1)}%
+                    </td>
+
+                    <td>
+                      {r.width.toFixed(2)}
+                    </td>
+
+                    <td>
+                      {r.score.toFixed(2)}
+                    </td>
+
+                    <td>
+                      {r.ess.toFixed(1)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Explanation */}
+          <div className="card mt-6 p-6">
+            <div className="eyebrow">
+              Why this matters
+            </div>
+
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              N1 tests regime information, N2 tests local geometry,
+              N3 tests adaptive bandwidth and N4 tests whether the
+              reliability safeguard prevents pathological
+              over-localization.
+            </p>
+          </div>
+        </>
+      )}
+    </Page>
+  );
 }
+
 
 function Theory() {
   return <Page><Section eyebrow="05 · Mathematics" title="The mathematical core">This page provides the professor a compact route from forecast errors to weighted conformal calibration.</Section>
